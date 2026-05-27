@@ -448,6 +448,11 @@
       color: var(--ink);
     }
 
+    .field-card input.is-missing {
+      border-color: var(--coral);
+      box-shadow: 0 0 0 3px rgba(255, 107, 74, 0.22);
+    }
+
     .range-buttons {
       display: flex;
       flex-wrap: wrap;
@@ -540,12 +545,10 @@
       color: white;
     }
 
-    .copy-btn:disabled {
+    .copy-btn.is-locked {
       background: #e6eeeb;
       color: #8da09a;
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
+      cursor: pointer;
     }
 
     pre {
@@ -1362,9 +1365,37 @@ IMPORTANTE
     function updateCopyButtons() {
       const ready = hasRequiredInputs();
       document.querySelectorAll("[data-copy]").forEach((button) => {
-        button.disabled = !ready;
+        button.classList.toggle("is-locked", !ready);
+        button.setAttribute("aria-disabled", String(!ready));
         button.title = ready ? "Copiar prompt completo" : "Completa banco, fecha inicio y fecha fin";
       });
+    }
+
+    function clearMissingState() {
+      [bankInput, startInput, endInput].forEach((input) => {
+        if (input.value.trim()) input.classList.remove("is-missing");
+      });
+    }
+
+    function focusFirstMissingInput() {
+      const checks = [
+        { input: bankInput, label: "banco o entidad" },
+        { input: startInput, label: "fecha inicio" },
+        { input: endInput, label: "fecha fin" }
+      ];
+      const missing = checks.filter(({ input }) => !input.value.trim());
+
+      [bankInput, startInput, endInput].forEach((input) => {
+        input.classList.toggle("is-missing", !input.value.trim());
+      });
+
+      if (!missing.length) return true;
+
+      const firstMissing = missing[0].input;
+      firstMissing.scrollIntoView({ behavior: "smooth", block: "center" });
+      window.setTimeout(() => firstMissing.focus({ preventScroll: true }), 260);
+      showToast(`Completa ${missing[0].label}.`);
+      return false;
     }
 
     function showToast(message) {
@@ -1382,10 +1413,7 @@ IMPORTANTE
 
     async function copyPrompt(id, button) {
       renderPrompts();
-      if (!hasRequiredInputs()) {
-        showToast("Completa banco, fecha inicio y fecha fin.");
-        return;
-      }
+      if (!focusFirstMissingInput()) return;
       const prompts = {
         promptOne: buildPromptOne,
         promptTwo: buildPromptTwo,
@@ -1443,8 +1471,14 @@ IMPORTANTE
     });
 
     [bankInput, startInput, endInput].forEach((input) => {
-      input.addEventListener("input", renderPrompts);
-      input.addEventListener("change", renderPrompts);
+      input.addEventListener("input", () => {
+        clearMissingState();
+        renderPrompts();
+      });
+      input.addEventListener("change", () => {
+        clearMissingState();
+        renderPrompts();
+      });
     });
 
     renderPrompts();
