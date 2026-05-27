@@ -1,0 +1,1453 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guía Finanzas con Claude | IA MASIVA</title>
+  <style>
+    :root {
+      --bg: #f4f8f6;
+      --ink: #101820;
+      --muted: #52635f;
+      --paper: #ffffff;
+      --line: #d6e3df;
+      --dark: #071513;
+      --accent: #00b894;
+      --accent-2: #2f6df6;
+      --mint: #dffcf2;
+      --coral: #ff6b4a;
+      --warn: #fff5d6;
+      --radius: 8px;
+      --shadow: 8px 8px 0 rgba(16, 24, 32, 0.92);
+      --soft-shadow: 0 24px 70px rgba(16, 24, 32, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      min-height: 58px;
+      padding: 10px clamp(14px, 4vw, 42px);
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      background: var(--accent);
+      color: var(--dark);
+      font-size: 12px;
+    }
+
+    .menu-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--ink);
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .menu-icon {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+      width: 18px;
+      height: 18px;
+    }
+
+    .menu-icon span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--ink);
+      transition: transform 180ms ease, opacity 180ms ease;
+    }
+
+    .topbar.is-open .menu-icon span:nth-child(1) {
+      transform: translateY(6px) rotate(45deg);
+    }
+
+    .topbar.is-open .menu-icon span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .topbar.is-open .menu-icon span:nth-child(3) {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    .nav {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: clamp(14px, 4vw, 42px);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      width: min(340px, calc(100vw - 28px));
+      padding: 12px;
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .topbar.is-open .nav {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .nav a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 42px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--muted);
+      background: #fbfdfc;
+    }
+
+    .nav a::after {
+      content: ">";
+      color: var(--accent);
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .nav a:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+      background: var(--mint);
+    }
+
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      align-items: end;
+      padding: clamp(48px, 8vw, 96px) clamp(18px, 5vw, 72px) 32px;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 10% 16%, rgba(0, 184, 148, 0.16), transparent 30%),
+        radial-gradient(circle at 92% 78%, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 32%),
+        linear-gradient(135deg, rgba(223, 252, 242, 0.92), transparent 48%),
+        var(--bg);
+    }
+
+    .hero-grid {
+      width: min(1200px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.48fr);
+      gap: clamp(28px, 5vw, 70px);
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      margin-bottom: 18px;
+      padding: 8px 12px;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      background: var(--mint);
+      font-size: 12px;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 980px;
+      margin-bottom: 18px;
+      font-size: clamp(45px, 8.6vw, 116px);
+      line-height: 0.9;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 span {
+      color: var(--accent-2);
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 23px);
+    }
+
+    .hero-card {
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--dark);
+      color: white;
+      padding: 22px;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .hero-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .hero-card p {
+      margin-bottom: 0;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 850;
+    }
+
+    .strip {
+      padding: 36px clamp(18px, 5vw, 72px);
+      background: var(--dark);
+      color: white;
+    }
+
+    .strip-inner {
+      width: min(1200px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 0.75fr 1.25fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .strip h2 {
+      margin-bottom: 0;
+      font-size: clamp(30px, 4.3vw, 58px);
+      line-height: 0.96;
+      text-transform: uppercase;
+    }
+
+    .strip p {
+      margin-bottom: 0;
+      color: #cfe0dc;
+      font-size: clamp(18px, 2vw, 23px);
+    }
+
+    .quick-map {
+      padding: 34px clamp(18px, 5vw, 72px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .quick-map-inner,
+    main {
+      width: min(1200px, 100%);
+      margin: 0 auto;
+    }
+
+    .section-kicker {
+      display: block;
+      margin-bottom: 16px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chips a,
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 9px 14px;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      background: var(--paper);
+      font-size: 14px;
+      font-weight: 900;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    main {
+      padding: clamp(34px, 5vw, 72px) clamp(18px, 4vw, 32px);
+    }
+
+    .panel {
+      margin-bottom: clamp(30px, 5vw, 58px);
+      padding: clamp(22px, 4vw, 38px);
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: start;
+      margin-bottom: 22px;
+    }
+
+    .number {
+      display: inline-flex;
+      width: fit-content;
+      margin-bottom: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: white;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .panel h2 {
+      margin-bottom: 10px;
+      font-size: clamp(31px, 4.7vw, 64px);
+      line-height: 0.98;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .panel h3 {
+      margin-bottom: 8px;
+      font-size: clamp(20px, 2.4vw, 30px);
+      line-height: 1.1;
+    }
+
+    .lead {
+      max-width: 880px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 21px);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .step,
+    .note,
+    .field-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      padding: 16px;
+    }
+
+    .step strong,
+    .note strong,
+    .field-card label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .step p,
+    .note p {
+      margin-bottom: 0;
+      color: #312f29;
+    }
+
+    .builder {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      align-items: end;
+      margin-top: 18px;
+    }
+
+    .field-card input {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--ink);
+      border-radius: 6px;
+      background: var(--paper);
+      padding: 10px 12px;
+      color: var(--ink);
+    }
+
+    .range-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .range-buttons button,
+    .copy-btn {
+      min-height: 42px;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--ink);
+      padding: 9px 14px;
+      font-weight: 950;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+
+    .range-buttons button:hover,
+    .copy-btn:hover {
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .warning {
+      margin-top: 18px;
+      border: 1px solid var(--coral);
+      border-radius: var(--radius);
+      background: var(--warn);
+      padding: 16px;
+    }
+
+    .warning strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 13px;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .warning p {
+      margin-bottom: 0;
+      color: #4a3510;
+    }
+
+    .prompt-box {
+      margin-top: 18px;
+      overflow: hidden;
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      background: #06110f;
+      color: white;
+    }
+
+    .prompt-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+      background: #0d1f1c;
+    }
+
+    .prompt-toolbar strong {
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .copy-btn {
+      min-height: 36px;
+      padding: 7px 12px;
+      background: var(--mint);
+      font-size: 13px;
+      transition: background 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .copy-btn.is-copied {
+      background: var(--accent);
+      color: var(--dark);
+    }
+
+    .copy-btn.is-error {
+      background: var(--coral);
+      color: white;
+    }
+
+    .copy-btn:disabled {
+      background: #e6eeeb;
+      color: #8da09a;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    pre {
+      margin: 0;
+      overflow: visible;
+      padding: 18px;
+      white-space: pre-wrap;
+      color: #f5f2e9;
+      font: 13px/1.52 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    .preview-note {
+      margin: 0;
+      padding: 10px 18px 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #9fb7b0;
+      font-size: 13px;
+    }
+
+    .dark-panel {
+      background: var(--dark);
+      color: white;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .dark-panel .lead {
+      color: #cfe0dc;
+    }
+
+    .dark-panel .step,
+    .dark-panel .note {
+      border-color: rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.06);
+      color: white;
+    }
+
+    .dark-panel .step p,
+    .dark-panel .note p {
+      color: white;
+    }
+
+    .closing {
+      padding: clamp(42px, 8vw, 94px) clamp(18px, 5vw, 72px);
+      background: var(--accent);
+      color: var(--dark);
+    }
+
+    .closing-inner {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+    }
+
+    .closing h2 {
+      max-width: 980px;
+      margin-bottom: 18px;
+      font-size: clamp(40px, 7vw, 96px);
+      line-height: 0.92;
+      text-transform: uppercase;
+    }
+
+    .closing p {
+      max-width: 820px;
+      margin-bottom: 0;
+      font-size: clamp(19px, 2.3vw, 27px);
+      font-weight: 760;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px clamp(18px, 5vw, 72px);
+      background: var(--dark);
+      color: white;
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      max-width: 310px;
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--mint);
+      padding: 12px 14px;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+      transform: translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 920px) {
+      .hero-grid,
+      .strip-inner,
+      .panel-header,
+      .grid,
+      .builder {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-header .pill {
+        width: fit-content;
+      }
+    }
+
+    @media (max-width: 560px) {
+      h1 {
+        font-size: clamp(42px, 16vw, 70px);
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="IA MASIVA">
+      <span class="brand-mark">IA</span>
+      <span>IA MASIVA</span>
+    </a>
+    <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="site-menu">
+      <span>Menú</span>
+      <span class="menu-icon" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+    <nav class="nav" id="site-menu" aria-label="Índice de la guía">
+      <a href="#preparacion">Preparación</a>
+      <a href="#prompt-1">Prompt 1</a>
+      <a href="#prompt-2">Dashboard</a>
+      <a href="#prompt-3">Tarea</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="inicio">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Guía completa para montar desde cero</span>
+        <h1>Usa <span>Claude</span> para tus finanzas personales</h1>
+        <p class="hero-copy">Si tus bancos todavía no se conectan con IA en Latinoamérica, toca hacerlo a nuestra manera: correos financieros, una tabla organizada y un dashboard que sí puedas revisar.</p>
+      </div>
+      <aside class="hero-card">
+        <strong>La idea</strong>
+        <p>Claude lee los correos de tu banco, arma un Excel con movimientos y después Code convierte esos datos en un informe visual.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="strip">
+    <div class="strip-inner">
+      <h2>Antes de pegar prompts</h2>
+      <p>Esto no es magia. Es un flujo simple: primero conectas Gmail, después importas movimientos por periodo, luego generas el dashboard y al final, solo si tiene sentido, programas la actualización automática.</p>
+    </div>
+  </section>
+
+  <section class="quick-map">
+    <div class="quick-map-inner">
+      <span class="section-kicker">El mapa rápido</span>
+      <div class="chips">
+        <a href="#preparacion">1. Prepara Claude</a>
+        <a href="#prompt-1">2. Crea el Excel</a>
+        <a href="#prompt-2">3. Genera el dashboard</a>
+        <a href="#prompt-3">4. Programa la tarea</a>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="panel" id="preparacion">
+      <div class="panel-header">
+        <div>
+          <span class="number">Paso 01</span>
+          <h2>Prepara el proyecto</h2>
+          <p class="lead">Haz esto una vez y ya tienes la base para repetir el proceso cada mes sin empezar de cero.</p>
+        </div>
+        <span class="pill">Tiempo estimado: 10 a 20 min</span>
+      </div>
+
+      <div class="grid">
+        <div class="step">
+          <strong>Conecta Gmail</strong>
+          <p>Entra a Claude, abre conectores y conecta tu Gmail. Claude necesita leer los correos donde tu banco te manda alertas de movimientos.</p>
+        </div>
+        <div class="step">
+          <strong>Crea la carpeta</strong>
+          <p>En Cowork crea una carpeta para este proyecto. Algo como finanzas personales funciona perfecto.</p>
+        </div>
+        <div class="step">
+          <strong>Elige modelo</strong>
+          <p>Selecciona Sonnet 4.6 para ejecutar el análisis. La idea es que tenga suficiente capacidad para leer, ordenar y construir archivos.</p>
+        </div>
+      </div>
+
+      <div class="builder" aria-label="Generador de fechas y banco">
+        <div class="field-card">
+          <label for="bankName">Banco o entidad</label>
+          <input id="bankName" type="text" placeholder="Ej: Bancolombia, Nubank, BBVA, Mercado Pago" required>
+        </div>
+        <div class="field-card">
+          <label for="startDate">Fecha inicio</label>
+      <input id="startDate" type="date" required>
+        </div>
+        <div class="field-card">
+          <label for="endDate">Fecha fin</label>
+      <input id="endDate" type="date" required>
+        </div>
+      </div>
+
+      <div class="range-buttons" aria-label="Rangos rápidos">
+        <button type="button" data-days="7">7 días</button>
+        <button type="button" data-days="30">30 días</button>
+        <button type="button" data-days="60">60 días</button>
+        <button type="button" data-days="90">90 días</button>
+        <button type="button" data-days="180">180 días</button>
+      </div>
+
+      <div class="warning">
+        <strong>Importante sobre tokens</strong>
+        <p>No recomiendo pedir más de 180 días en una sola solicitud. Periodos grandes pueden gastarte los tokens casi de inmediato. Lo más sano es revisar por mes, validar que la tabla quedó bien y después seguir con el siguiente mes.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="prompt-1">
+      <div class="panel-header">
+        <div>
+          <span class="number">Paso 02</span>
+          <h2>Crea el Excel de movimientos</h2>
+          <p class="lead">Copia este prompt en Claude. Si llenaste las fechas y el banco arriba, el botón ya lo copia con esos datos puestos.</p>
+        </div>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-toolbar">
+          <strong>Prompt 1: buscar correos y crear finanzas_personales.xlsx</strong>
+          <button class="copy-btn" type="button" data-copy="promptOne">Copiar</button>
+        </div>
+        <div>
+          <pre id="promptOne"></pre>
+        </div>
+        <p class="preview-note">Vista previa corta. El botón copia el prompt completo con tus fechas y banco.</p>
+      </div>
+    </section>
+
+    <section class="panel dark-panel" id="prompt-2">
+      <div class="panel-header">
+        <div>
+          <span class="number">Paso 03</span>
+          <h2>Convierte el Excel en dashboard</h2>
+          <p class="lead">Cuando Claude termine el archivo, entra a Code, selecciona la misma carpeta del proyecto y pega este prompt.</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="step">
+          <strong>Qué genera</strong>
+          <p>Un HTML moderno con métricas, gráficos, tablas e insights automáticos.</p>
+        </div>
+        <div class="step">
+          <strong>Qué archivo usa</strong>
+          <p>Lee finanzas_personales.xlsx, especialmente la hoja movimientos.</p>
+        </div>
+        <div class="step">
+          <strong>Qué puedes preguntar</strong>
+          <p>Después puedes pedir análisis por categoría, mes, moneda, banco, suscripciones o gastos raros.</p>
+        </div>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-toolbar">
+          <strong>Prompt 2: generar dashboard_finanzas.html</strong>
+          <button class="copy-btn" type="button" data-copy="promptTwo">Copiar</button>
+        </div>
+        <div>
+          <pre id="promptTwo"></pre>
+        </div>
+        <p class="preview-note">Vista previa corta. El botón copia el prompt completo.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="prompt-3">
+      <div class="panel-header">
+        <div>
+          <span class="number">Paso 04</span>
+          <h2>Programa la actualización automática</h2>
+          <p class="lead">Este paso es opcional. Úsalo cuando tu Excel ya esté al día y quieras que Claude revise correos nuevos todos los días.</p>
+        </div>
+      </div>
+
+      <div class="warning">
+        <strong>Ojo antes de programar</strong>
+        <p>La tarea arranca desde la última fecha registrada en la tabla. Si el último registro es de hace más de 6 meses, la actualización automática puede gastarte todos los créditos casi de inmediato. Programa la tarea si y solo si el último registro de la tabla es máximo de hace 30 días.</p>
+      </div>
+
+      <div class="grid" style="margin-top: 18px;">
+        <div class="step">
+          <strong>Vuelve a Cowork</strong>
+          <p>Entra otra vez a la carpeta del proyecto y busca la opción de tareas programadas.</p>
+        </div>
+        <div class="step">
+          <strong>Crea una nueva tarea</strong>
+          <p>Créala desde cero y configúrala manualmente. Nombre sugerido: actualizar finanzas personales.</p>
+        </div>
+        <div class="step">
+          <strong>Configura la frecuencia</strong>
+          <p>Pega el prompt, selecciona la misma carpeta del Excel y pon frecuencia diaria.</p>
+        </div>
+      </div>
+
+      <div class="warning">
+        <strong>Importante sobre la ejecución</strong>
+        <p>La tarea solo se ejecuta cuando tienes la app de Claude abierta a la hora que programaste la tarea. Para que sea completamente automático, configúrala para que actúe sin preguntar. En modelo recomiendo usar Sonnet 4.6. Si un día no se ejecuta, no pasa nada: en la siguiente ejecución va a actualizar los datos desde la última fecha registrada hasta la fecha actual.</p>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-toolbar">
+          <strong>Prompt 3: actualizar la base automáticamente</strong>
+          <button class="copy-btn" type="button" data-copy="promptThree">Copiar</button>
+        </div>
+        <div>
+          <pre id="promptThree"></pre>
+        </div>
+        <p class="preview-note">Vista previa corta. El botón copia el prompt completo con tu banco.</p>
+      </div>
+    </section>
+  </main>
+
+  <section class="closing">
+    <div class="closing-inner">
+      <h2>Ahora sí tienes tus finanzas en datos</h2>
+      <p>La IA se vuelve útil cuando deja de responder bonito y empieza a ordenar cosas reales: correos, movimientos, categorías, gastos, ingresos y decisiones.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>IA MASIVA</span>
+    <span>Guía finanzas con Claude</span>
+  </footer>
+
+  <div class="toast" role="status" aria-live="polite">Prompt copiado</div>
+
+  <script>
+    const topbar = document.querySelector(".topbar");
+    const menuToggle = document.querySelector(".menu-toggle");
+    const menuLinks = document.querySelectorAll(".nav a, .brand");
+    const bankInput = document.querySelector("#bankName");
+    const startInput = document.querySelector("#startDate");
+    const endInput = document.querySelector("#endDate");
+    const toast = document.querySelector(".toast");
+
+    const categories = `- comida
+- restaurantes
+- supermercado
+- transporte
+- gasolina
+- movilidad
+- vivienda
+- arriendo
+- hipoteca
+- servicios
+- agua
+- luz
+- gas
+- internet
+- celular
+- salud
+- farmacia
+- seguros
+- educación
+- cursos
+- suscripciones
+- entretenimiento
+- streaming
+- viajes
+- hoteles
+- vuelos
+- compras
+- ropa
+- tecnología
+- hogar
+- mascotas
+- gimnasio
+- inversiones
+- ahorro
+- impuestos
+- comisiones
+- intereses
+- crédito
+- salario
+- freelance
+- negocio
+- transferencias
+- retiro
+- cashback
+- criptomonedas
+- trading
+- plataformas digitales
+- otros`;
+
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function addDays(date, amount) {
+      const copy = new Date(date);
+      copy.setDate(copy.getDate() + amount);
+      return copy;
+    }
+
+    function getValues() {
+      return {
+        bank: bankInput.value.trim() || "[PEGAR NOMBRE DEL BANCO]",
+        start: startInput.value || "[PEGAR FECHA]",
+        end: endInput.value || "[PEGAR FECHA]"
+      };
+    }
+
+    function buildPromptOne() {
+      const values = getValues();
+      return `Tu trabajo es actuar como un analista financiero automatizado.
+
+Busca en Gmail todos los correos relacionados con movimientos financieros dentro del siguiente rango de fechas:
+
+FECHA INICIO: ${values.start}
+FECHA FIN: ${values.end}
+
+Banco o entidad financiera:
+${values.bank}
+
+IMPORTANTE:
+El sistema debe funcionar globalmente con bancos, fintechs y billeteras digitales de cualquier país.
+
+Debes detectar automáticamente correos relacionados con:
+- compras
+- pagos
+- transferencias
+- ingresos
+- retiros
+- depósitos
+- pagos automáticos
+- suscripciones
+- tarjetas débito/crédito
+- billeteras digitales
+- fintechs
+- pagos QR
+- movimientos ACH
+- wire transfers
+- SEPA
+- SPEI
+- PIX
+- PSE
+- pagos móviles
+- comisiones
+- intereses
+- cashback
+- nómina
+- inversiones
+- créditos
+- préstamos
+- exchange de criptomonedas
+- plataformas de pago
+- alertas financieras
+
+También debes reconocer automáticamente:
+- múltiples monedas
+- formatos de fecha regionales
+- separadores decimales distintos
+- diferentes formatos de correos bancarios
+
+Crea un archivo Excel llamado:
+
+finanzas_personales.xlsx
+
+El archivo debe tener DOS hojas.
+
+========================================
+HOJA 1: movimientos
+========================================
+
+La hoja debe contener exactamente estas columnas:
+
+- fecha
+- tipo
+- categoria
+- moneda
+- monto
+- descripcion
+- entidad
+
+Reglas:
+- "tipo" solo puede ser:
+  - ingreso
+  - gasto
+
+- "monto" debe ser numérico sin símbolos.
+
+- "moneda" debe guardar el código:
+  - USD
+  - EUR
+  - COP
+  - MXN
+  - ARS
+  - GBP
+  - BRL
+  - etc.
+
+- "descripcion" debe ser corta pero clara.
+
+- "entidad" debe contener:
+  - banco
+  - fintech
+  - wallet
+  - exchange
+  - plataforma financiera
+
+- NO dupliques movimientos.
+
+- Si un correo no tiene suficiente información, ignóralo.
+
+- Ordena todos los movimientos desde el más antiguo al más reciente.
+
+Categorías permitidas:
+
+${categories}
+
+Si una transacción no encaja claramente, usa "otros".
+
+========================================
+HOJA 2: historial_actualizaciones
+========================================
+
+Crear estas columnas:
+
+- fecha_actualizacion
+- fecha_inicio_importada
+- fecha_fin_importada
+- movimientos_agregados
+
+Agregar un registro indicando:
+- fecha y hora actual
+- rango de fechas utilizado
+- cantidad de movimientos encontrados
+
+========================================
+IMPORTANTE
+========================================
+
+- Guarda el archivo Excel dentro de la carpeta actual del proyecto.
+- Si el archivo ya existe:
+  - NO elimines datos anteriores
+  - agrega únicamente movimientos nuevos
+  - evita duplicados comparando fecha, monto y descripcion
+  - conserva el historial existente
+- Al finalizar:
+  - confirma cuántos movimientos fueron agregados
+  - indica el rango total de fechas almacenadas`;
+    }
+
+    function buildPromptTwo() {
+      return `Tu trabajo es actuar como un analista financiero y desarrollador frontend.
+
+Usa el archivo:
+
+finanzas_personales.xlsx
+
+Lee la hoja llamada:
+movimientos
+
+Y genera un dashboard financiero completo en HTML moderno, interactivo y visualmente atractivo.
+
+========================================
+OBJETIVO
+========================================
+
+Crear un archivo:
+
+dashboard_finanzas.html
+
+El dashboard debe funcionar localmente en navegador sin necesidad de backend.
+
+========================================
+DISEÑO
+========================================
+
+Estilo:
+- moderno
+- premium
+- oscuro
+- tipo startup fintech
+- responsive
+- visualmente limpio
+- fácil de entender
+
+Usa:
+- HTML
+- CSS
+- JavaScript
+- Chart.js
+
+========================================
+MÉTRICAS PRINCIPALES
+========================================
+
+Mostrar:
+- ingresos totales
+- gastos totales
+- balance total
+- cantidad de transacciones
+- categoría con mayor gasto
+- promedio mensual de gasto
+- distribución por moneda
+- entidades más utilizadas
+
+========================================
+GRÁFICOS
+========================================
+
+Crear:
+- gráfico de gastos por categoría
+- gráfico de ingresos vs gastos
+- evolución temporal de gastos
+- top categorías
+- distribución porcentual
+- tendencia mensual
+- distribución por moneda
+- entidades financieras más usadas
+
+========================================
+TABLAS
+========================================
+
+Agregar:
+- últimos movimientos
+- mayores gastos
+- mayores ingresos
+- movimientos por moneda
+
+========================================
+ANÁLISIS AUTOMÁTICO
+========================================
+
+Generar insights automáticos como:
+- categorías donde más dinero se gasta
+- crecimiento o reducción de gastos
+- suscripciones detectadas
+- meses más costosos
+- patrones frecuentes
+- posibles gastos innecesarios
+- comportamiento por moneda
+- comportamiento por entidad financiera
+
+========================================
+IMPORTANTE
+========================================
+
+- El dashboard debe leer automáticamente los datos del Excel.
+- Si necesitas convertir el Excel a CSV o JSON para visualizarlo, hazlo automáticamente.
+- Todo debe quedar funcionando dentro de la carpeta actual del proyecto.
+- Genera código limpio y bien organizado.
+- Agrega comentarios dentro del código.
+- El resultado debe verse profesional y listo para mostrar.`;
+    }
+
+    function buildPromptThree() {
+      const values = getValues();
+      return `Tu trabajo es actualizar automáticamente la base de datos financiera.
+
+Usa el archivo:
+
+finanzas_personales.xlsx
+
+========================================
+PASO 1
+========================================
+
+Lee la hoja:
+
+historial_actualizaciones
+
+Identifica la última:
+- fecha_fin_importada
+
+Esa fecha será el punto de partida para buscar nuevos movimientos.
+
+========================================
+PASO 2
+========================================
+
+Busca en Gmail únicamente correos financieros posteriores a esa fecha.
+
+Banco o entidad:
+${values.bank}
+
+IMPORTANTE:
+Debe funcionar con entidades financieras de cualquier país y reconocer automáticamente distintos formatos bancarios y monedas.
+
+Debes analizar:
+- compras
+- pagos
+- transferencias
+- depósitos
+- ingresos
+- retiros
+- pagos automáticos
+- suscripciones
+- alertas bancarias
+- movimientos de tarjeta
+- billeteras digitales
+- fintechs
+- exchanges
+- pagos QR
+- movimientos internacionales
+- plataformas financieras
+
+========================================
+PASO 3
+========================================
+
+Extrae únicamente movimientos nuevos.
+
+NO agregues duplicados.
+
+Compara:
+- fecha
+- monto
+- descripcion
+
+========================================
+PASO 4
+========================================
+
+Agrega los nuevos registros en la hoja:
+movimientos
+
+Usa estas columnas:
+- fecha
+- tipo
+- categoria
+- moneda
+- monto
+- descripcion
+- entidad
+
+Las categorías permitidas son:
+
+${categories}
+
+========================================
+PASO 5
+========================================
+
+Actualiza la hoja:
+historial_actualizaciones
+
+Agrega:
+- fecha_actualizacion
+- fecha_inicio_importada
+- fecha_fin_importada
+- movimientos_agregados
+
+========================================
+IMPORTANTE
+========================================
+
+- Mantén el formato original del archivo.
+- Conserva todo el historial existente.
+- No elimines registros antiguos.
+- Si no hay movimientos nuevos, registra igualmente la actualización indicando 0 movimientos agregados.
+- Al finalizar, resume:
+  - cantidad de movimientos agregados
+  - rango actualizado
+  - categorías detectadas
+  - monedas detectadas`;
+    }
+
+    function renderPrompts() {
+      document.querySelector("#promptOne").textContent = getPreview(buildPromptOne());
+      document.querySelector("#promptTwo").textContent = getPreview(buildPromptTwo());
+      document.querySelector("#promptThree").textContent = getPreview(buildPromptThree());
+      updateCopyButtons();
+    }
+
+    function getPreview(prompt) {
+      const lines = prompt.split("\n");
+      const preview = lines.slice(0, 10).join("\n");
+      return `${preview}\n\n...\n\nPrompt completo listo para copiar con el botón.`;
+    }
+
+    function hasRequiredInputs() {
+      return Boolean(bankInput.value.trim() && startInput.value && endInput.value);
+    }
+
+    function updateCopyButtons() {
+      const ready = hasRequiredInputs();
+      document.querySelectorAll("[data-copy]").forEach((button) => {
+        button.disabled = !ready;
+        button.title = ready ? "Copiar prompt completo" : "Completa banco, fecha inicio y fecha fin";
+      });
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("is-visible");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("is-visible"), 1900);
+    }
+
+    function setMenu(open) {
+      topbar.classList.toggle("is-open", open);
+      menuToggle.setAttribute("aria-expanded", String(open));
+      menuToggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+    }
+
+    async function copyPrompt(id, button) {
+      renderPrompts();
+      if (!hasRequiredInputs()) {
+        showToast("Completa banco, fecha inicio y fecha fin.");
+        return;
+      }
+      const prompts = {
+        promptOne: buildPromptOne,
+        promptTwo: buildPromptTwo,
+        promptThree: buildPromptThree
+      };
+      const text = prompts[id]().trim();
+      const originalText = button.textContent;
+      button.classList.remove("is-error");
+      try {
+        await navigator.clipboard.writeText(text);
+        button.textContent = "Copiado";
+        button.classList.add("is-copied");
+        showToast("Prompt copiado");
+      } catch (error) {
+        button.textContent = "No copió";
+        button.classList.add("is-error");
+        showToast("No se pudo copiar. Selecciónalo manualmente.");
+      }
+
+      window.clearTimeout(button.copyTimer);
+      button.copyTimer = window.setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove("is-copied", "is-error");
+      }, 1600);
+    }
+
+    document.querySelectorAll("[data-copy]").forEach((button) => {
+      button.addEventListener("click", () => copyPrompt(button.dataset.copy, button));
+    });
+
+    menuToggle.addEventListener("click", () => {
+      setMenu(!topbar.classList.contains("is-open"));
+    });
+
+    menuLinks.forEach((link) => {
+      link.addEventListener("click", () => setMenu(false));
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") setMenu(false);
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!topbar.contains(event.target)) setMenu(false);
+    });
+
+    document.querySelectorAll("[data-days]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const days = Number(button.dataset.days);
+        const today = new Date();
+        endInput.value = formatDate(today);
+        startInput.value = formatDate(addDays(today, -days + 1));
+        renderPrompts();
+      });
+    });
+
+    [bankInput, startInput, endInput].forEach((input) => {
+      input.addEventListener("input", renderPrompts);
+      input.addEventListener("change", renderPrompts);
+    });
+
+    renderPrompts();
+  </script>
+</body>
+</html>
